@@ -2,8 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:photo_app/ui/edit_page.dart';
 
 class HomePage extends StatefulWidget {
+  final File editedImage;
+
+  const HomePage({this.editedImage});
+
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -11,6 +16,12 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   File _image;
   final picker = ImagePicker();
+
+  /*@override
+  void initState() {
+    super.initState();
+    _image = widget.editedImage;
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -28,9 +39,9 @@ class _HomePageState extends State<HomePage> {
                 child: Container(
                   height: 150,
                   width: 150,
-                  child: _image == null
+                  child: widget.editedImage == null
                       ? Image.asset('assets/images/user.png')
-                      : Image.file(_image),
+                      : Image.file(widget.editedImage),
                 ),
               ),
               SizedBox(
@@ -53,6 +64,12 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => EditPhotoPage(image: _image),
+          ),
+        );
       } else {
         print('No image selected.');
       }
@@ -65,6 +82,12 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => EditPhotoPage(image: _image),
+          ),
+        );
       } else {
         print('No image selected.');
       }
@@ -79,11 +102,18 @@ class _HomePageState extends State<HomePage> {
         children: <Widget>[
           SimpleDialogOption(
             child: Text('From gallery'),
-            onPressed: () => getImageFromGallery(),
+            onPressed: () {
+              getImageFromGallery();
+              Navigator.pop(context);
+            },
           ),
           SimpleDialogOption(
-              child: Text('Take a photo'),
-              onPressed: () => getImageFromCamera()),
+            child: Text('Take a photo'),
+            onPressed: () {
+              getImageFromCamera();
+              Navigator.pop(context);
+            },
+          ),
         ],
       ),
     );
