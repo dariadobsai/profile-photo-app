@@ -1,8 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_cropper/image_cropper.dart';
-import 'package:photo_app/ui/home_page.dart';
+import 'package:photo_app/bloc/photo_bloc.dart';
 
 class EditPhotoPage extends StatefulWidget {
   final File image;
@@ -92,10 +93,16 @@ class _EditPhotoPageState extends State<EditPhotoPage> {
         ));
     if (croppedFile != null) {
       imageFile = croppedFile;
-      Navigator.pop(context, HomePage(editedImage: imageFile));
+      submitPhoto(imageFile);
+      Navigator.pop(context);
       /*setState(() {
         state = AppState.cropped;
       });*/
     }
+  }
+
+  submitPhoto(File editedPhoto) {
+    final photoBloc = BlocProvider.of<PhotoBloc>(context);
+    photoBloc.add(GetPhoto(editedPhoto));
   }
 }

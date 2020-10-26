@@ -1,14 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:photo_app/bloc/photo_bloc.dart';
 import 'package:photo_app/ui/edit_page.dart';
 
 class HomePage extends StatefulWidget {
-  final File editedImage;
-
-  const HomePage({this.editedImage});
-
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -16,16 +14,16 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   File _image;
   final picker = ImagePicker();
+  final photoBloc = PhotoBloc();
 
-  /*@override
-  void initState() {
-    super.initState();
-    _image = widget.editedImage;
-  }*/
+  @override
+  void dispose() {
+    super.dispose();
+    photoBloc.close();
+  }
 
   @override
   Widget build(BuildContext context) {
-    // TODO: close dialog on start
     return SafeArea(
       child: Scaffold(
         body: Center(
@@ -36,12 +34,17 @@ class _HomePageState extends State<HomePage> {
                 onTap: () {
                   _showSelectionDialog();
                 },
-                child: Container(
-                  height: 150,
-                  width: 150,
-                  child: widget.editedImage == null
-                      ? Image.asset('assets/images/user.png')
-                      : Image.file(widget.editedImage),
+                child: BlocBuilder<PhotoBloc, PhotoState>(
+                  cubit: photoBloc, // provide the local bloc instance
+                  builder: (context, state) {
+                    return Container(
+                      height: 150,
+                      width: 150,
+                      child: state is PhotoInitial
+                          ? Image.asset('assets/images/user.png')
+                          : Image.file((state as PhotoSet).photo),
+                    );
+                  },
                 ),
               ),
               SizedBox(
