@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:photo_app/bloc/photo_bloc.dart';
 import 'package:photo_app/route/generate_route.dart';
 import 'package:photo_app/route/routes.dart';
 
@@ -9,13 +11,20 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'PhotoApp',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return BlocProvider(
+      create: (_) => PhotoBloc(),
+      child: BlocBuilder<PhotoBloc, PhotoState>(
+        builder: (_, state) {
+          return MaterialApp(
+            title: 'PhotoApp',
+            theme: ThemeData(
+              primarySwatch: Colors.blue,
+            ),
+            initialRoute: routeHome,
+            onGenerateRoute: RouteGenerator.generateRoute,
+          );
+        },
       ),
-      initialRoute: routeHome,
-      onGenerateRoute: RouteGenerator.generateRoute,
     );
   }
 }

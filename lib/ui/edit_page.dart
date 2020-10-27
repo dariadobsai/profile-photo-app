@@ -102,7 +102,6 @@ class _EditPhotoPageState extends State<EditPhotoPage> {
   }
 
   submitPhoto(File editedPhoto) {
-    final photoBloc = BlocProvider.of<PhotoBloc>(context);
-    photoBloc.add(GetPhoto(editedPhoto));
+    context.bloc<PhotoBloc>().add(GetPhoto(editedPhoto));
   }
 }
