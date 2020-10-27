@@ -14,13 +14,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   File _image;
   final picker = ImagePicker();
-  final photoBloc = PhotoBloc();
-
-  @override
-  void dispose() {
-    super.dispose();
-    photoBloc.close();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +28,8 @@ class _HomePageState extends State<HomePage> {
                   _showSelectionDialog();
                 },
                 child: BlocBuilder<PhotoBloc, PhotoState>(
-                  cubit: photoBloc, // provide the local bloc instance
+                  cubit: BlocProvider.of<PhotoBloc>(
+                      context), // provide the local bloc instance
                   builder: (context, state) {
                     return Container(
                       height: 150,

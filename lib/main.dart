@@ -8,22 +8,19 @@ void main() {
   runApp(MyApp());
 }
 
+// TODO: DOCUMENTATION https://bloclibrary.dev/#/recipesfluttershowsnackbar
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => PhotoBloc(),
-      child: BlocBuilder<PhotoBloc, PhotoState>(
-        builder: (_, state) {
-          return MaterialApp(
-            title: 'PhotoApp',
-            theme: ThemeData(
-              primarySwatch: Colors.blue,
-            ),
-            initialRoute: routeHome,
-            onGenerateRoute: RouteGenerator.generateRoute,
-          );
-        },
+      child: MaterialApp(
+        title: 'PhotoApp',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        initialRoute: routeHome,
+        onGenerateRoute: RouteGenerator.generateRoute,
       ),
     );
   }

@@ -53,8 +53,8 @@ class _EditPhotoPageState extends State<EditPhotoPage> {
       ),
     );
   }
-
-  /*void _clearImage() {
+/*
+  void _clearImage() {
     imageFile = null;
     setState(() {
       state = AppState.free;

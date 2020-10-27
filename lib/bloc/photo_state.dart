@@ -15,6 +15,7 @@ class PhotoSet extends PhotoState {
 
   PhotoSet(this.photo) : super([photo]);
 
+  // TODO: it wasn't updating, solution -> https://github.com/felangel/bloc/issues/1090
   @override
-  List<Object> get props => this.props;
+  List<Object> get props => [photo];
 }
