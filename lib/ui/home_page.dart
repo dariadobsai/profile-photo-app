@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:photo_app/bloc/photo_bloc.dart';
-import 'package:photo_app/route/routes.dart';
+import 'package:photo_app/route/route_names.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -35,7 +35,8 @@ class _HomePageState extends State<HomePage> {
                       height: 150,
                       width: 150,
                       child: state is PhotoInitial
-                          ? Image.asset('assets/images/user.png')
+                          ? Image.asset(
+                              'assets/images/user.png') // set a placeholder image when no photo is set
                           : Image.file((state as PhotoSet).photo),
                     );
                   },
@@ -53,6 +54,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  /// Method for sending a selected or taken photo to the EditPage
   Future selectOrTakePhoto(ImageSource imageSource) async {
     final pickedFile = await picker.getImage(source: imageSource);
 
@@ -65,6 +67,7 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  /// Selection dialog that prompts the user to select an existing photo or take a new one
   Future _showSelectionDialog() async {
     await showDialog(
       context: context,

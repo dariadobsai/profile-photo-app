@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:photo_app/route/routes.dart';
+import 'package:photo_app/route/route_names.dart';
 import 'package:photo_app/ui/edit_page.dart';
 import 'package:photo_app/ui/home_page.dart';
 

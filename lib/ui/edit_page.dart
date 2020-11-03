@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:photo_app/bloc/photo_bloc.dart';
-import 'package:photo_app/route/routes.dart';
+import 'package:photo_app/route/route_names.dart';
 
 class EditPhotoPage extends StatefulWidget {
   final File image;
