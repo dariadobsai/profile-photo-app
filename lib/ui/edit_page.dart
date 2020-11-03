@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:photo_app/bloc/photo_bloc.dart';
+import 'package:photo_app/route/routes.dart';
 
 class EditPhotoPage extends StatefulWidget {
   final File image;
@@ -14,52 +15,21 @@ class EditPhotoPage extends StatefulWidget {
   _EditPhotoPageState createState() => _EditPhotoPageState();
 }
 
-enum AppState {
-  free,
-  picked,
-  cropped,
-}
-
 class _EditPhotoPageState extends State<EditPhotoPage> {
-  AppState state;
   File imageFile;
 
   @override
   void initState() {
     super.initState();
-    state = AppState.picked;
     imageFile = widget.image;
+
+    if (imageFile != null) _cropImage();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Container(
-          child: widget.image != null ? Image.file(widget.image) : Container(),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          /* if (state == AppState.free) {
-            Navigator.popUntil(context, ModalRoute.withName('/home'));
-          } else */
-          if (state == AppState.picked) _cropImage();
-          /*else if (state == AppState.cropped) {
-            // TODO: pop until with data https://medium.com/@hungregistermail/flutter-popuntil-with-return-data-ece825aedbd0
-            Navigator.popUntil(context, ModalRoute.withName('/home'));
-          }*/
-        },
-      ),
-    );
+    return Container();
   }
-/*
-  void _clearImage() {
-    imageFile = null;
-    setState(() {
-      state = AppState.free;
-    });
-  }*/
 
   Future<Null> _cropImage() async {
     File croppedFile = await ImageCropper.cropImage(
@@ -84,7 +54,7 @@ class _EditPhotoPageState extends State<EditPhotoPage> {
               ],
         androidUiSettings: AndroidUiSettings(
             toolbarTitle: 'Cropper',
-            toolbarColor: Colors.deepOrange,
+            toolbarColor: Colors.blue,
             toolbarWidgetColor: Colors.white,
             initAspectRatio: CropAspectRatioPreset.original,
             lockAspectRatio: false),
@@ -93,15 +63,8 @@ class _EditPhotoPageState extends State<EditPhotoPage> {
         ));
     if (croppedFile != null) {
       imageFile = croppedFile;
-      submitPhoto(imageFile);
-      Navigator.pop(context);
-      /*setState(() {
-        state = AppState.cropped;
-      });*/
+      context.bloc<PhotoBloc>().add(GetPhoto(imageFile));
+      Navigator.pop(context, routeHome);
     }
-  }
-
-  submitPhoto(File editedPhoto) {
-    context.bloc<PhotoBloc>().add(GetPhoto(editedPhoto));
   }
 }

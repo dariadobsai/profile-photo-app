@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:photo_app/bloc/photo_bloc.dart';
-import 'package:photo_app/ui/edit_page.dart';
+import 'package:photo_app/route/routes.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -41,9 +41,7 @@ class _HomePageState extends State<HomePage> {
                   },
                 ),
               ),
-              SizedBox(
-                height: 50,
-              ),
+              SizedBox(height: 50),
               Text(
                 'Please select your profile photo',
                 style: TextStyle(fontSize: 22),
@@ -55,39 +53,15 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Future getImageFromGallery() async {
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+  Future selectOrTakePhoto(ImageSource imageSource) async {
+    final pickedFile = await picker.getImage(source: imageSource);
 
     setState(() {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => EditPhotoPage(image: _image),
-          ),
-        );
-      } else {
-        print('No image selected.');
-      }
-    });
-  }
-
-  Future getImageFromCamera() async {
-    final pickedFile = await picker.getImage(source: ImageSource.camera);
-
-    setState(() {
-      if (pickedFile != null) {
-        _image = File(pickedFile.path);
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => EditPhotoPage(image: _image),
-          ),
-        );
-      } else {
-        print('No image selected.');
-      }
+        Navigator.pushNamed(context, routeEdit, arguments: _image);
+      } else
+        print('No photo was selected or taken');
     });
   }
 
@@ -100,14 +74,14 @@ class _HomePageState extends State<HomePage> {
           SimpleDialogOption(
             child: Text('From gallery'),
             onPressed: () {
-              getImageFromGallery();
+              selectOrTakePhoto(ImageSource.gallery);
               Navigator.pop(context);
             },
           ),
           SimpleDialogOption(
             child: Text('Take a photo'),
             onPressed: () {
-              getImageFromCamera();
+              selectOrTakePhoto(ImageSource.camera);
               Navigator.pop(context);
             },
           ),
