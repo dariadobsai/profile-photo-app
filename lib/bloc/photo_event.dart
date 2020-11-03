@@ -11,6 +11,5 @@ class GetPhoto extends PhotoEvent {
   GetPhoto(this.photo) : super([photo]);
 
   @override
-  // TODO: implement props
   List<Object> get props => throw UnimplementedError();
 }
