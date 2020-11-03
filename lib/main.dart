@@ -8,7 +8,6 @@ void main() {
   runApp(MyApp());
 }
 
-// TODO: DOCUMENTATION https://bloclibrary.dev/#/recipesfluttershowsnackbar
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
