@@ -34,10 +34,10 @@ class _EditPhotoPageState extends State<EditPhotoPage> {
   Future<Null> _cropImage() async {
     File croppedFile = await ImageCropper.cropImage(
         sourcePath: imageFile.path,
-        aspectRatioPresets: [CropAspectRatioPreset.original],
         androidUiSettings: AndroidUiSettings(
             toolbarTitle: 'Cropper',
             toolbarColor: Colors.blue,
+            hideBottomControls: true,
             toolbarWidgetColor: Colors.white,
             initAspectRatio: CropAspectRatioPreset.original,
             lockAspectRatio: false),
