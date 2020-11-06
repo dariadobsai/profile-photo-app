@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
-import 'package:photo_app/ui/home_page.dart';
+import 'package:photo_app/route/routes.dart';
 
 class EditPhotoPage extends StatefulWidget {
   final File image;
@@ -13,77 +13,29 @@ class EditPhotoPage extends StatefulWidget {
   _EditPhotoPageState createState() => _EditPhotoPageState();
 }
 
-enum AppState {
-  free,
-  picked,
-  cropped,
-}
-
 class _EditPhotoPageState extends State<EditPhotoPage> {
-  AppState state;
   File imageFile;
 
   @override
   void initState() {
     super.initState();
-    state = AppState.picked;
     imageFile = widget.image;
+
+    if (imageFile != null) _cropImage();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Container(
-          child: widget.image != null ? Image.file(widget.image) : Container(),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          /* if (state == AppState.free) {
-            Navigator.popUntil(context, ModalRoute.withName('/home'));
-          } else */
-          if (state == AppState.picked) _cropImage();
-          /*else if (state == AppState.cropped) {
-            // TODO: pop until with data https://medium.com/@hungregistermail/flutter-popuntil-with-return-data-ece825aedbd0
-            Navigator.popUntil(context, ModalRoute.withName('/home'));
-          }*/
-        },
-      ),
-    );
+    return Container();
   }
-
-  /*void _clearImage() {
-    imageFile = null;
-    setState(() {
-      state = AppState.free;
-    });
-  }*/
 
   Future<Null> _cropImage() async {
     File croppedFile = await ImageCropper.cropImage(
         sourcePath: imageFile.path,
-        aspectRatioPresets: Platform.isAndroid
-            ? [
-                CropAspectRatioPreset.square,
-                CropAspectRatioPreset.ratio3x2,
-                CropAspectRatioPreset.original,
-                CropAspectRatioPreset.ratio4x3,
-                CropAspectRatioPreset.ratio16x9
-              ]
-            : [
-                CropAspectRatioPreset.original,
-                CropAspectRatioPreset.square,
-                CropAspectRatioPreset.ratio3x2,
-                CropAspectRatioPreset.ratio4x3,
-                CropAspectRatioPreset.ratio5x3,
-                CropAspectRatioPreset.ratio5x4,
-                CropAspectRatioPreset.ratio7x5,
-                CropAspectRatioPreset.ratio16x9
-              ],
         androidUiSettings: AndroidUiSettings(
             toolbarTitle: 'Cropper',
-            toolbarColor: Colors.deepOrange,
+            toolbarColor: Colors.blue,
+            hideBottomControls: true,
             toolbarWidgetColor: Colors.white,
             initAspectRatio: CropAspectRatioPreset.original,
             lockAspectRatio: false),
@@ -92,10 +44,7 @@ class _EditPhotoPageState extends State<EditPhotoPage> {
         ));
     if (croppedFile != null) {
       imageFile = croppedFile;
-      Navigator.pop(context, HomePage(editedImage: imageFile));
-      /*setState(() {
-        state = AppState.cropped;
-      });*/
+      Navigator.pop(context, routeHome);
     }
   }
 }
