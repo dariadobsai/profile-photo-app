@@ -14,6 +14,7 @@ class MyApp extends StatelessWidget {
     return BlocProvider(
       create: (_) => PhotoBloc(),
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'PhotoApp',
         theme: ThemeData(
           primarySwatch: Colors.blue,
