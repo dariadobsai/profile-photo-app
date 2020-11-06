@@ -20,34 +20,36 @@ class _HomePageState extends State<HomePage> {
     return SafeArea(
       child: Scaffold(
         body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              GestureDetector(
-                onTap: () {
-                  _showSelectionDialog();
-                },
-                child: BlocBuilder<PhotoBloc, PhotoState>(
-                  cubit: BlocProvider.of<PhotoBloc>(
-                      context), // provide the local bloc instance
-                  builder: (context, state) {
-                    return Container(
+          child: BlocBuilder<PhotoBloc, PhotoState>(
+            cubit: BlocProvider.of<PhotoBloc>(
+                context), // provide the local bloc instance
+            builder: (context, state) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      _showSelectionDialog();
+                    },
+                    child: Container(
                       height: 150,
                       width: 150,
                       child: state is PhotoInitial
                           ? Image.asset(
                               'assets/images/user.png') // set a placeholder image when no photo is set
                           : Image.file((state as PhotoSet).photo),
-                    );
-                  },
-                ),
-              ),
-              SizedBox(height: 50),
-              Text(
-                'Please select your profile photo',
-                style: TextStyle(fontSize: 22),
-              ),
-            ],
+                    ),
+                  ),
+                  SizedBox(height: 50),
+                  Text(
+                    state is PhotoInitial
+                        ? 'Please select your profile photo'
+                        : 'Nice photo:)',
+                    style: TextStyle(fontSize: 22),
+                  ),
+                ],
+              );
+            },
           ),
         ),
       ),
