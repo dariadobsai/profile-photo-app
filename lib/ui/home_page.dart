@@ -1,7 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:photo_app/bloc/photo_bloc.dart';
+import 'package:photo_app/route/route_names.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -14,7 +17,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: close dialog on start
     return SafeArea(
       child: Scaffold(
         body: Center(
@@ -25,17 +27,22 @@ class _HomePageState extends State<HomePage> {
                 onTap: () {
                   _showSelectionDialog();
                 },
-                child: Container(
-                  height: 150,
-                  width: 150,
-                  child: _image == null
-                      ? Image.asset('assets/images/user.png')
-                      : Image.file(_image),
+                child: BlocBuilder<PhotoBloc, PhotoState>(
+                  cubit: BlocProvider.of<PhotoBloc>(
+                      context), // provide the local bloc instance
+                  builder: (context, state) {
+                    return Container(
+                      height: 150,
+                      width: 150,
+                      child: state is PhotoInitial
+                          ? Image.asset(
+                              'assets/images/user.png') // set a placeholder image when no photo is set
+                          : Image.file((state as PhotoSet).photo),
+                    );
+                  },
                 ),
               ),
-              SizedBox(
-                height: 50,
-              ),
+              SizedBox(height: 50),
               Text(
                 'Please select your profile photo',
                 style: TextStyle(fontSize: 22),
@@ -47,30 +54,20 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Future getImageFromGallery() async {
-    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+  /// Method for sending a selected or taken photo to the EditPage
+  Future selectOrTakePhoto(ImageSource imageSource) async {
+    final pickedFile = await picker.getImage(source: imageSource);
 
     setState(() {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
-      } else {
-        print('No image selected.');
-      }
+        Navigator.pushNamed(context, routeEdit, arguments: _image);
+      } else
+        print('No photo was selected or taken');
     });
   }
 
-  Future getImageFromCamera() async {
-    final pickedFile = await picker.getImage(source: ImageSource.camera);
-
-    setState(() {
-      if (pickedFile != null) {
-        _image = File(pickedFile.path);
-      } else {
-        print('No image selected.');
-      }
-    });
-  }
-
+  /// Selection dialog that prompts the user to select an existing photo or take a new one
   Future _showSelectionDialog() async {
     await showDialog(
       context: context,
@@ -79,11 +76,18 @@ class _HomePageState extends State<HomePage> {
         children: <Widget>[
           SimpleDialogOption(
             child: Text('From gallery'),
-            onPressed: () => getImageFromGallery(),
+            onPressed: () {
+              selectOrTakePhoto(ImageSource.gallery);
+              Navigator.pop(context);
+            },
           ),
           SimpleDialogOption(
-              child: Text('Take a photo'),
-              onPressed: () => getImageFromCamera()),
+            child: Text('Take a photo'),
+            onPressed: () {
+              selectOrTakePhoto(ImageSource.camera);
+              Navigator.pop(context);
+            },
+          ),
         ],
       ),
     );
